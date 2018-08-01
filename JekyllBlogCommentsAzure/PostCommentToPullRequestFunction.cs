@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Octokit;
 using System;
@@ -29,6 +29,8 @@ namespace JekyllBlogCommentsAzure
             // Make sure the site posting the comment is the correct site.
             var allowedSite = ConfigurationManager.AppSettings["CommentWebsiteUrl"];
             var postedSite = form["comment-site"];
+            if (!String.IsNullOrWhiteSpace(allowedSite) )
+                return request.CreateErrorResponse(HttpStatusCode.BadRequest, $"First condition has fired");
             if (!String.IsNullOrWhiteSpace(allowedSite) && !AreSameSites(allowedSite, postedSite))
                 return request.CreateErrorResponse(HttpStatusCode.BadRequest, $"This Jekyll comments receiever does not handle forms for '${postedSite}'. You should point to your own instance.");
 
