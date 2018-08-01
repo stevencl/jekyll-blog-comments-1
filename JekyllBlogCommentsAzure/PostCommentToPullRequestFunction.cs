@@ -24,7 +24,9 @@ namespace JekyllBlogCommentsAzure
         [FunctionName("PostComment")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestMessage request)
         {
+
             var form = await request.Content.ReadAsFormDataAsync();
+            return request.CreateErrorResponse(HttpStatusCode.BadRequest, $"Form data is '${form}'. ");
 
             // Make sure the site posting the comment is the correct site.
             var allowedSite = ConfigurationManager.AppSettings["CommentWebsiteUrl"];
